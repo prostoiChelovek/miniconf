@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project(miniconf)
 
-set(CMAKE_C_COMPILER gcc)
-set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -O0 -g -Wall -Werror")
+add_library(miniconf INTERFACE)
+target_sources(miniconf INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src/miniconf.cpp)
+target_include_directories(miniconf INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(CMAKE_C_COMPILER gcc)
+    set(CMAKE_CXX_COMPILER g++)
+    set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -O0 -g -Wall -Werror")
 
-include_directories(src)
+    add_executable(miniconf_example1 examples/miniconf_example1.cpp)
+    add_executable(miniconf_example2 examples/miniconf_example2.cpp)
 
-set(EX1_SRC examples/miniconf_example1.cpp)
-set(EX2_SRC examples/miniconf_example2.cpp)
-
-add_executable(miniconf_example1 ${EX1_SRC})
-add_executable(miniconf_example2 ${EX2_SRC})
+    target_link_libraries(miniconf_example1 miniconf)
+    target_link_libraries(miniconf_example2 miniconf)
+endif()
