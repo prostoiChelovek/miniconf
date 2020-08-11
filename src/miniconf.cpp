@@ -831,6 +831,10 @@ namespace miniconf {
         return _optionValues[flag];
     }
 
+    Value const &Config::operator[](const std::string &flag) const {
+        return _optionValues.at(flag);
+    }
+
     void Config::print(FILE* fd)
     {
         fprintf(fd, "\n[[[  %s  ]]]\n\n", "CONFIGURATION");
@@ -952,7 +956,7 @@ namespace miniconf {
         return outStr;
     }
 
-    void Config::config(const std::string& configPath)
+    bool Config::config(const std::string& configPath)
     {
         // read content of the file
         std::ifstream ifd(configPath, std::ios::in | std::ios::binary);
@@ -972,19 +976,17 @@ namespace miniconf {
         // default is json
 #ifdef MINICONF_JSON_SUPPORT
         if (extension == "json" || extension == "JSON") {
-            loadJSON(configContent);
-            return;
+            return loadJSON(configContent);
         } else if (extension == "csv" || extension == "CSV") {
-            loadCSV(configContent);
-            return;
+            return loadCSV(configContent);
         } else {
-            loadJSON(configContent);
+            return loadJSON(configContent);
         }
 #else
-        loadCSV(configContent);
+        return loadCSV(configContent);
 #endif
 
-        return;
+        return false;
     }
 
     bool Config::loadCSV(const std::string& CSVStr)

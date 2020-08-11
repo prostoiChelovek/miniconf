@@ -315,14 +315,20 @@ namespace miniconf
              */
             Value& operator[](const std::string& flag);
 
+            /* Accesses the configuration value
+             *
+             * If the configuration value does not exist, std::out_of_range exception is thrown
+             */
+            Value const& operator[](const std::string& flag) const;
+
             /* Load the configuration settings via a config file
              * 
-             * This function loads a config file, if the config file has been specified in 
+             * This function loads a config file, if the config file has been specified in
              * command line arguments, this will be called automatically in "parse()" function.
              *
              * @configPath the input configuration file path
              */
-            void config(const std::string& configPath);
+            bool config(const std::string& configPath);
 
             /* Serializes the current configuration
              *
